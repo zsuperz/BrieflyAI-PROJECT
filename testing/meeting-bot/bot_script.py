@@ -3,6 +3,10 @@ import time
 import whisper
 import sys
 import os
+import matplotlib.pyplot as plt
+from collections import Counter
+import re
+
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
@@ -18,9 +22,9 @@ def start_audio_recording():
         "ffmpeg",
         "-y",  # Overwrite output file
         "-f", "dshow",
-        "-i", 'audio=Stereo Mix (Realtek(R) Audio)',
+        "-i", 'audio=Stereo Mix (Realtek(R) Audio)',  # Use virtual audio cable
         OUTPUT_AUDIO
-    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    ])
 
 def stop_audio_recording(process):
     print("Stopping audio recording...")
@@ -33,14 +37,37 @@ def stop_audio_recording(process):
 
 def transcribe_audio(file_path):
     print("Transcribing audio with Whisper...")
-    model = whisper.load_model("medium")  # Change to "small", "medium", or "large" if needed
+    model = whisper.load_model("medium")  # Can be changed to "small" or "large"
     result = model.transcribe(file_path)
 
+    text = result["text"]
+
     with open(OUTPUT_TRANSCRIPT, "w", encoding="utf-8") as f:
-        f.write(result["text"])
+        f.write(text)
 
     print(f"Transcript saved to {OUTPUT_TRANSCRIPT}")
-    return result["text"]
+
+    # ---- 📊 WORD FREQUENCY VISUALIZATION ----
+    words = re.findall(r'\b\w+\b', text.lower())
+    word_counts = Counter(words)
+    most_common = word_counts.most_common(10)
+
+    if most_common:
+        labels, counts = zip(*most_common)
+        plt.figure(figsize=(10, 6))
+        plt.bar(labels, counts, color='skyblue')
+        plt.title("Top 10 Most Frequent Words in Meeting Transcript")
+        plt.xlabel("Words")
+        plt.ylabel("Frequency")
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.savefig("word_frequency.png")
+        plt.show()
+        print("Word frequency chart saved as word_frequency.png")
+    else:
+        print("No words found in transcription.")
+
+    return text
 
 def join_meeting_logged_in():
     options = Options()
@@ -88,7 +115,7 @@ def join_meeting_logged_in():
     recording_process = start_audio_recording()
 
     try:
-        time.sleep(60)  # Stay in the meeting
+        time.sleep(60)  # Stay in the meeting for 60 seconds
     finally:
         stop_audio_recording(recording_process)
         driver.quit()

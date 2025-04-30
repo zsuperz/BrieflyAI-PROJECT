@@ -1,0 +1,1 @@
+The meeting is about demonstrating an AI bot that can attend online meetings on behalf of a user. The bot listens to the meeting, generates a transcript, and creates a summary of the key topics discussed. The demonstration will show how to use AI and specifically how to create and access Hugging Face tokens.

@@ -1,14 +1,17 @@
 import { useState } from 'react'
 
 function App() {
+  const [chartUrl, setChartUrl] = useState('')
   const [meetingUrl, setMeetingUrl] = useState('')
   const [transcript, setTranscript] = useState('')
+  const [summary, setSummary] = useState('')  // New state to hold the summary
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
     setTranscript('')
+    setSummary('')  // Reset summary when submitting new meeting URL
 
     try {
       const response = await fetch('http://127.0.0.1:5000/transcribe', {
@@ -22,8 +25,10 @@ function App() {
       if (response.ok) {
         const data = await response.json()
         setTranscript(data.transcript)
+        setSummary(data.summary)  // Set the summary
+        setChartUrl(data.chart_url)
       } else {
-        console.error('Error fetching transcript')
+        console.error('Error fetching transcript or summary')
       }
     } catch (error) {
       console.error('Error:', error)
@@ -34,8 +39,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
-
-
       <div className="w-full max-w-2xl bg-black rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-center text-white mb-6">
           Meeting Transcription
@@ -79,9 +82,29 @@ function App() {
             <h2 className="text-lg font-semibold text-gray-700 mb-2">
               Transcript:
             </h2>
-            <pre className="bg-black text-white p-4 rounded-md max-h-80 overflow-y-auto whitespace-pre-wrap break-words">
+            <pre className="bg-black text-white p-4 rounded-md whitespace-pre-wrap break-words">
               {transcript}
             </pre>
+          </div>
+        )}
+
+        {summary && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">
+              Summary of the Meeting:
+            </h2>
+            <pre className="bg-black text-white p-4 rounded-md whitespace-pre-wrap break-words">
+              {summary}
+            </pre>
+          </div>
+        )}
+
+        {chartUrl && (
+          <div className="mt-6">
+            <h2 className="text-lg font-semibold text-gray-700 mb-2">
+              Speaker Chart:
+            </h2>
+            <img src={chartUrl} alt="Speaker chart" className="w-full h-auto rounded-md" />
           </div>
         )}
       </div>

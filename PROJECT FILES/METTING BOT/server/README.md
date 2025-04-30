@@ -23,3 +23,5 @@ pip install pyannote.audio
 pip install openai-whisper
 
 pip install selenium
+
+pip install torch torchaudio

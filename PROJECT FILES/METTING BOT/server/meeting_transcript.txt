@@ -1,1 +1,9 @@
- t bark t bark t bark t bark T bark t bark Hello Yo whats up man So we have some related here that maybe you recognize it it called AI agent. Are you there? So this agent is only for 60 minutes in this meeting then it will leave new meetings after that it will generate some transcript. And that's all. It is the agent that is fuller.
+[0:00:00] Unknown:  Hello this is Akshat today we are going to learn about how the AI bot works and yeah
+[0:00:09] SPEAKER_00:  we will teach like this is the AI agent that I am testing it just what it does just joins
+[0:00:16] SPEAKER_00:  a meeting the main natural idea is a bot if you are busy or something you can't attend
+[0:00:22] SPEAKER_00:  the online meeting and that is important so you can send your bot there the bot will listen
+[0:00:28] SPEAKER_00:  everything in the meeting and give you a transcript also somebody that if you don't even have time
+[0:00:34] SPEAKER_00:  to translate what it wants then it will generate a summary that will show you that overall idea
+[0:00:41] SPEAKER_00:  what happened in the meeting and all the important things they discussed and other stuff so yeah let
+[0:00:47] SPEAKER_00:  me show you let me introduce you guy here to show you how to use AI in face hi everyone in this video
+[0:00:56] SPEAKER_00:  I'll be showing you how to create an access hugging face tokens
