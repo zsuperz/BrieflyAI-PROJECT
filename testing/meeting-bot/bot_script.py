@@ -33,7 +33,7 @@ def stop_audio_recording(process):
 
 def transcribe_audio(file_path):
     print("Transcribing audio with Whisper...")
-    model = whisper.load_model("base")  # Change to "small", "medium", or "large" if needed
+    model = whisper.load_model("medium")  # Change to "small", "medium", or "large" if needed
     result = model.transcribe(file_path)
 
     with open(OUTPUT_TRANSCRIPT, "w", encoding="utf-8") as f:

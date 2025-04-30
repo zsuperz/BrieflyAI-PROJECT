@@ -1,0 +1,75 @@
+def run_meeting_bot(meeting_url):
+    import subprocess
+    import time
+    import whisper
+    import os
+    from selenium import webdriver
+    from selenium.webdriver.edge.service import Service
+    from selenium.webdriver.edge.options import Options
+    from selenium.webdriver.common.by import By
+
+    OUTPUT_AUDIO = "meeting_audio.wav"
+    OUTPUT_TRANSCRIPT = "meeting_transcript.txt"
+
+    def start_audio_recording():
+        return subprocess.Popen([
+            "ffmpeg", "-y", "-f", "dshow", "-i", 'audio=Stereo Mix (Realtek(R) Audio)', OUTPUT_AUDIO
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    def stop_audio_recording(process):
+        process.terminate()
+        try:
+            process.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            process.kill()
+
+    def transcribe_audio(file_path):
+        model = whisper.load_model("medium")
+        result = model.transcribe(file_path)
+        with open(OUTPUT_TRANSCRIPT, "w", encoding="utf-8") as f:
+            f.write(result["text"])
+        return result["text"]
+
+    options = Options()
+    options.add_argument("--use-fake-ui-for-media-stream")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--start-maximized")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("user-data-dir=C:/Users/super/AppData/Local/Microsoft/Edge/User Data")
+    options.add_argument("profile-directory=Profile 3")
+
+    service = Service(executable_path="C:/Users/super/AppData/Local/Microsoft/Microsoft Edge Developer/msedgedriver.exe")
+    driver = webdriver.Edge(service=service, options=options)
+    driver.get(meeting_url)
+
+    time.sleep(5)
+
+    try:
+        mic_button = driver.find_element(By.XPATH, "//div[@role='button'][@aria-label*='microphone']")
+        cam_button = driver.find_element(By.XPATH, "//div[@role='button'][@aria-label*='camera']")
+        if mic_button.get_attribute("aria-pressed") != "false":
+            mic_button.click()
+        if cam_button.get_attribute("aria-pressed") != "false":
+            cam_button.click()
+    except:
+        pass
+
+    time.sleep(2)
+
+    try:
+        join_now_button = driver.find_element(By.XPATH, "//span[contains(text(),'Join now')]/..")
+        join_now_button.click()
+    except:
+        pass
+
+    recording_process = start_audio_recording()
+    try:
+        time.sleep(60)
+    finally:
+        stop_audio_recording(recording_process)
+        driver.quit()
+        return transcribe_audio(OUTPUT_AUDIO)
