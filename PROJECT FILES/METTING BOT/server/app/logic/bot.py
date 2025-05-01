@@ -1,3 +1,4 @@
+
 import os
 import time
 import subprocess
@@ -7,6 +8,9 @@ from datetime import timedelta
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 from selenium.webdriver.common.by import By
 from pyannote.audio import Pipeline
 from collections import defaultdict
@@ -66,13 +70,14 @@ def plot_speaker_durations(speaker_durations):
     plt.close()
     print(f"✅ Speaker duration graph saved to {SPEAKER_GRAPH_IMAGE}")
 
-def diarize_and_transcribe(audio_path):
+def diarize_and_transcribe(audio_path, participant_names=None):
     print("\n🔍 Starting speaker diarization...")
     diarization = pipeline(audio_path)
     print("✅ Diarization complete. Detected speaker segments:")
 
     segments_with_speakers = []
     speaker_durations = defaultdict(float)
+    speaker_map = {}
 
     for segment, _, speaker in diarization.itertracks(yield_label=True):
         duration = segment.end - segment.start
@@ -82,6 +87,18 @@ def diarize_and_transcribe(audio_path):
 
     plot_speaker_durations(speaker_durations)
 
+    # Assign names heuristically (if names are fewer than speakers, fallback to IDs)
+    sorted_speakers = sorted(speaker_durations.items(), key=lambda x: -x[1])
+
+    if participant_names:
+        print("\n👤 Mapping speakers based on talking time:")
+        for i, (speaker, _) in enumerate(sorted_speakers):
+            assigned_name = participant_names[i] if i < len(participant_names) else speaker
+            speaker_map[speaker] = assigned_name
+            print(f"  {speaker} → {assigned_name}")
+    else:
+        speaker_map = {s: s for s, _ in sorted_speakers}    
+
     print("\n✍️ Starting Whisper transcription...")
     whisper_result = whisper_model.transcribe(audio_path, verbose=False)
     print("✅ Transcription complete. Matching segments to speakers...")
@@ -89,7 +106,7 @@ def diarize_and_transcribe(audio_path):
     def get_speaker_label(timestamp):
         for start, end, speaker in segments_with_speakers:
             if start - 0.5 <= timestamp <= end + 0.5:
-                return speaker
+                return speaker_map.get(speaker, speaker)
         return "Unknown"
 
     combined_output = []
@@ -164,6 +181,46 @@ def generate_summary_with_gemini(transcript):
 def run_meeting_bot(meeting_url):
     print(f"\n🚀 Joining meeting at: {meeting_url}")
     
+
+
+def get_participant_names(driver):
+    print("👥 Trying to open participant panel...")
+    try:
+        time.sleep(5)  # ensure we're fully in the meeting
+
+        participants_button = driver.find_element(By.XPATH, "//button[contains(@aria-label, 'People')]")
+        driver.execute_script("arguments[0].click();", participants_button)
+
+        # Wait until at least one participant shows up
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//span[contains(@class, 'notranslate')]"))
+        )
+
+        print("🔍 Looking for participant name elements...")
+        fallback_elements = driver.find_elements(By.XPATH, "//span[contains(@class, 'notranslate')]")
+        names = [el.text.strip() for el in fallback_elements if el.text.strip()]
+
+        excluded_names = ["AI Agent", "Meeting Room", "Your presentation"]
+        names = [name for name in names if name not in excluded_names]
+
+        print(f"🧾 Found {len(names)} participant names:")
+        for name in names:
+            print(f" - {name}")
+
+        return names
+    except Exception as e:
+        print("⚠️ Could not fetch participants:", e)
+        return []
+
+
+
+
+
+def run_meeting_bot(meeting_url):
+    print(f"\n🚀 Joining meeting at: {meeting_url}")
+
+
+
     # Set up Edge options
     options = Options()
     options.add_argument("--use-fake-ui-for-media-stream")
@@ -194,7 +251,7 @@ def run_meeting_bot(meeting_url):
     force_mute(driver)
     time.sleep(2)
 
-    # Click join
+    # ✅ Click "Join now"
     try:
         join_btn = driver.find_element(By.XPATH, "//span[contains(text(),'Join now')]/..")
         join_btn.click()
@@ -202,18 +259,26 @@ def run_meeting_bot(meeting_url):
     except Exception as e:
         print("⚠️ Could not click 'Join now':", str(e))
 
-    # Record audio
+    # ✅ Wait and open the participant panel before recording starts
+    time.sleep(5)
+    participant_names = get_participant_names(driver)  # <-- Now we open panel inside this
+
+    # ✅ Start recording AFTER participant names are loaded
     recorder = start_audio_recording()
+
     try:
         print("🕒 Staying in the meeting for 65 seconds...")
-        time.sleep(65)
+        time.sleep(65)  # or however long you want to record
+    except Exception as e:
+        print("❌ Error during meeting wait:", e)
     finally:
         stop_audio_recording(recorder)
         driver.quit()
         print("👋 Left the meeting.")
 
-    # Transcribe & diarize
-    transcript_text = diarize_and_transcribe(OUTPUT_AUDIO)
+
+    # Transcribe & diarize with speaker name mapping
+    transcript_text = diarize_and_transcribe(OUTPUT_AUDIO, participant_names)  # ✅ Pass names
 
     # Generate summary with Gemini
     summary = generate_summary_with_gemini(transcript_text)
