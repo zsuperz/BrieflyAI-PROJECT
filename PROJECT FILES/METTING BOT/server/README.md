@@ -25,3 +25,5 @@ pip install openai-whisper
 pip install selenium
 
 pip install torch torchaudio
+
+start a server : flask run

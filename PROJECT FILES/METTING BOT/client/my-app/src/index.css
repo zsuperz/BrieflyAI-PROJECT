@@ -5,3 +5,57 @@
 body {
   @apply bg-gray-100;
 }
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradientMove 5s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes dotsBounce {
+  0%, 80%, 100% {
+    transform: scale(0);
+    opacity: 0.3;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-dots {
+  animation: dotsBounce 1.4s infinite ease-in-out both;
+}
+.animate-dots:nth-child(1) {
+  animation-delay: -0.32s;
+}
+.animate-dots:nth-child(2) {
+  animation-delay: -0.16s;
+}
+.animate-dots:nth-child(3) {
+  animation-delay: 0;
+}
+
+@keyframes particle-bg {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+.animate-particle-bg {
+  animation: particle-bg 20s linear infinite;
+}

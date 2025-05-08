@@ -1,18 +1,7 @@
-[0:00:00] super aspire tech:  I'm going to use other stuff, I think, the air eye stuff.
-[0:00:05] super aspire tech:  I'll use the coffee and the cake.
-[0:00:08] super aspire tech:  I'm going to use the color first time.
-[0:00:10] super aspire tech:  I was going to use the soapy one so far.
-[0:00:13] super aspire tech:  So yeah, it's great, really.
-[0:00:17] super aspire tech:  I'm just trying to use the color.
-[0:00:19] super aspire tech:  Then I'll use the keys.
-[0:00:21] super aspire tech:  So yeah, that's all for today.
-[0:00:26] super aspire tech:  And that's what I'm going to use for the next one.
-[0:00:32] super aspire tech:  So yeah, the first one is for you, the second one is for you.
-[0:00:36] super aspire tech:  The third one is for you.
-[0:00:38] super aspire tech:  Yay!
-[0:00:40] super aspire tech:  Okay, so we are done with the show.
-[0:00:44] super aspire tech:  And in that minute, this is all about the AI test.
-[0:00:49] SPEAKER_00:  Here we are testing according to the AI agent.
-[0:00:52] SPEAKER_00:  So yeah, it's going to go back in a minute.
-[0:00:55] SPEAKER_00:  So yeah, that I talked about and I think it is the best of the agent
-[0:01:01] SPEAKER_00:  according to the transcript.
+[0:00:00] Sanchay Mandil:  this water right now we are seeing in our meeting.
+[0:00:03] Sanchay Mandil:  This is collecting all the voice
+[0:00:06] Sanchay Mandil:  which we are seeing in our meeting
+[0:00:08] Sanchay Mandil:  and summarizing it into short notes
+[0:00:11] Sanchay Mandil:  and provide the conclusion after the meeting.
+[0:01:01] SPEAKER_04:  Hello, hello.
+[0:01:02] SPEAKER_04:  Yeah, yeah, I'm Akshath. I have joined.

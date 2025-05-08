@@ -37,8 +37,13 @@ function App() {
     }
   }
 
+
+  
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
+     <div className="absolute top-7 text-7xl font-extrabold bg-gradient-to-r from-pink-500 via-yellow-400 to-blue-500 bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient">
+  Bot Meeting Summary App
+</div>
       <div className="w-full max-w-2xl bg-black rounded-xl shadow-lg p-8">
         <h1 className="text-3xl font-bold text-center text-white mb-6">
           Meeting Transcription
@@ -72,10 +77,15 @@ function App() {
         </form>
 
         {loading && (
-          <p className="mt-4 text-center text-gray-500 font-medium">
-            Loading transcription...
-          </p>
-        )}
+  <div className="mt-6 flex flex-col items-center justify-center">
+  <div className="flex space-x-2">
+  <span className="w-3 h-3 bg-gray-500 rounded-full animate-dots"></span>
+  <span className="w-3 h-3 bg-gray-500 rounded-full animate-dots"></span>
+  <span className="w-3 h-3 bg-gray-500 rounded-full animate-dots"></span>
+</div>
+    <p className="mt-2 text-gray-300 font-medium">Transcribing meeting...</p>
+  </div>
+)}
 
         {transcript && (
           <div className="mt-6">

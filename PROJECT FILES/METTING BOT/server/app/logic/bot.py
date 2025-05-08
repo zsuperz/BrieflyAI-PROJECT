@@ -1,3 +1,5 @@
+# Licensed under AGPL-3.0 by zsuperz - Contact for commercial use
+
 
 import os
 import time
@@ -33,7 +35,7 @@ pipeline = Pipeline.from_pretrained("pyannote/speaker-diarization-3.1")
 print("✅ Speaker diarization model loaded.")
 
 print("🔄 Loading Whisper transcription model...")
-whisper_model = whisper.load_model("medium")
+whisper_model = whisper.load_model("small")
 print("✅ Whisper model loaded.")
 
 def start_audio_recording():
