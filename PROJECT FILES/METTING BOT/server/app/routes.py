@@ -1,3 +1,7 @@
+# routes.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
 from flask import Blueprint, request, jsonify
 import logging
 from flask_cors import CORS

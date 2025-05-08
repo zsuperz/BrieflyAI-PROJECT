@@ -1,3 +1,10 @@
+# full_working_bot.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
+
+
+
 import subprocess
 import time
 import whisper

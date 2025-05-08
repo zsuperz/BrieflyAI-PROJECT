@@ -1,3 +1,7 @@
+# run.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
 from app import create_app
 import os
 from dotenv import load_dotenv

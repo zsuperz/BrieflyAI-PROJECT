@@ -1,3 +1,7 @@
+# meetingjoinbot.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
 from selenium import webdriver
 from selenium.webdriver.edge.service import Service
 from selenium.webdriver.edge.options import Options

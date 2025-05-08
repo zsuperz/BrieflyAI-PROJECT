@@ -1,3 +1,10 @@
+# cromebottest.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
+
+
+
 # this is for crome brower but the all the crome browser needs to be closed to make it work
 
 from selenium import webdriver

@@ -1,3 +1,7 @@
+# speaker_identity.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
+
 import whisper
 from pyannote.audio import Pipeline
 from datetime import timedelta

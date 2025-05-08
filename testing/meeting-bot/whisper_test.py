@@ -1,3 +1,6 @@
+# whisper.py
+# Licensed under AGPL-3.0 by zsuperz
+# Contact zsupercodez@gmail.com for commercial licensing options
 import whisper
 
 # Load Whisper model (you can change this to "base", "small", "medium", or "large")
