@@ -3,7 +3,6 @@
 # Contact zsupercodez@gmail.com for commercial licensing options
 
 
-
 import subprocess
 import time
 import whisper

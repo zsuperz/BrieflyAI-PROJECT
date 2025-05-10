@@ -25,6 +25,7 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Global paths
@@ -43,11 +44,12 @@ print("✅ Whisper model loaded.")
 
 def start_audio_recording():
     print("🎙️ Starting audio recording using FFmpeg...")
+    audio_device = os.getenv("AUDIO_DEVICE_NAME", "Stereo Mix (Realtek(R) Audio)")
     return subprocess.Popen([
         "ffmpeg",
         "-y",
         "-f", "dshow",
-        "-i", 'audio=Stereo Mix (Realtek(R) Audio)',
+        "-i", f"audio={audio_device}",
         OUTPUT_AUDIO
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
