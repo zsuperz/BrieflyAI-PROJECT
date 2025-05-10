@@ -26,6 +26,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+required_vars = ["GEMINI_API_KEY", "EDGE_DRIVER_PATH", "EDGE_USER_DATA_DIR", "EDGE_PROFILE", "AUDIO_DEVICE_NAME"]
+missing = [var for var in required_vars if not os.getenv(var)]
+if missing:
+    raise EnvironmentError(f"Missing required environment variables: {', '.join(missing)}")
+
+# ✅ Load the environment variables(HERE).
+
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 # Global paths
@@ -45,12 +52,15 @@ print("✅ Whisper model loaded.")
 def start_audio_recording():
     print("🎙️ Starting audio recording using FFmpeg...")
     audio_device = os.getenv("AUDIO_DEVICE_NAME", "Stereo Mix (Realtek(R) Audio)")
+    audio_device = os.getenv("AUDIO_DEVICE_NAME", "Stereo Mix (Realtek(R) Audio)")
     return subprocess.Popen([
         "ffmpeg",
         "-y",
         "-f", "dshow",
         "-i", f"audio={audio_device}",
+
         OUTPUT_AUDIO
+
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 def stop_audio_recording(process):
@@ -233,10 +243,15 @@ def run_meeting_bot(meeting_url):
     options.add_argument("--use-fake-ui-for-media-stream")
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
-    options.add_argument("user-data-dir=C:/Users/super/AppData/Local/Microsoft/Edge/User Data")
-    options.add_argument("profile-directory=Profile 3")
-    
-    service = Service(executable_path="C:/Users/super/AppData/Local/Microsoft/Microsoft Edge Developer/msedgedriver.exe")
+    edge_user_data_dir = os.getenv("EDGE_USER_DATA_DIR")
+    edge_profile = os.getenv("EDGE_PROFILE")
+    edge_driver_path = os.getenv("EDGE_DRIVER_PATH")
+
+    options.add_argument(f"user-data-dir={edge_user_data_dir}")
+    options.add_argument(f"profile-directory={edge_profile}")
+
+    service = Service(executable_path=edge_driver_path)
+
     driver = webdriver.Edge(service=service, options=options)
     driver.get(meeting_url)
 
